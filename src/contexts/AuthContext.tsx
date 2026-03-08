@@ -31,12 +31,10 @@ function AuthProvider({ children }: AuthProviderProps) {
 					name: user?.displayName,
 					email: user?.email,
 				});
-
-				setLoadingAuth(false);
 			} else {
 				setUser(null);
-				setLoadingAuth(false);
 			}
+			setLoadingAuth(false);
 		});
 
 		return () => {
