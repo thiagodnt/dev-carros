@@ -14,7 +14,7 @@ export function Header() {
 
 	async function handleLogout() {
 		await signOut(auth);
-		navigate('/');
+		navigate('/', { replace: true });
 		toast.success('Usuário deslogado com sucesso');
 	}
 
