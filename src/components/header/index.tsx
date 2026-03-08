@@ -1,11 +1,22 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import logo from '../../assets/logo.png';
-import { FiLogIn, FiUser } from 'react-icons/fi';
+import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { IconButton } from '../iconButton';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../services/firebaseConnection';
+import toast from 'react-hot-toast';
 
 export function Header() {
+	const navigate = useNavigate();
 	const { signed, loadingAuth } = useContext(AuthContext);
+
+	async function handleLogout() {
+		await signOut(auth);
+		navigate('/');
+		toast.success('Usuário deslogado com sucesso');
+	}
 
 	return (
 		<div className="w-full flex justify-center items-center bg-white mb-2">
@@ -14,19 +25,15 @@ export function Header() {
 					<img className="w-40 h-16 object-contain" src={logo} alt="Logo DevCarros" />
 				</Link>
 				{!loadingAuth && signed && (
-					<Link to="/dashboard">
-						<div className="border-2 border-gray-900 rounded-full p-1">
-							<FiUser size={22} color="#101828" />
-						</div>
-					</Link>
+					<IconButton onClick={handleLogout}>
+						<FiLogOut size={22} color="#101828" />
+					</IconButton>
 				)}
 
 				{!loadingAuth && !signed && (
-					<Link to="/login">
-						<div className="border-2 border-gray-900 rounded-full p-1">
-							<FiLogIn size={22} color="#101828" />
-						</div>
-					</Link>
+					<IconButton to="/login">
+						<FiLogIn size={22} color="#101828" />
+					</IconButton>
 				)}
 			</header>
 		</div>
