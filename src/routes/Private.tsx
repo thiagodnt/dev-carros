@@ -1,12 +1,8 @@
-import { useContext, type ReactNode } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { Navigate } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
-interface PrivateProps {
-	children: ReactNode;
-}
-
-export function Private({ children }: PrivateProps) {
+export function Private() {
 	const { signed, loadingAuth } = useContext(AuthContext);
 
 	if (loadingAuth) {
@@ -17,5 +13,5 @@ export function Private({ children }: PrivateProps) {
 		return <Navigate to="/login" replace />;
 	}
 
-	return children;
+	return <Outlet />;
 }
