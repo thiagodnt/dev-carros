@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../../components/button';
 
-// import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-// import { auth } from '../../services/firebaseConnection';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
 
 type FormData = z.infer<typeof schema>;
@@ -36,23 +36,23 @@ export function Register() {
 	});
 
 	async function onSubmit(data: FormData) {
-		// try {
-		// 	const newUser = await createUserWithEmailAndPassword(auth, data.email, data.password);
-		// 	await updateProfile(newUser.user, {
-		// 		displayName: data.name,
-		// 	});
-		// 	toast.success('Cadastro realizado com sucesso.');
-		// 	navigate('/dashboard', { replace: true });
-		// } catch (error) {
-		// 	console.log(error);
-		// 	toast.error(
-		// 		<div>
-		// 			Erro ao criar conta!
-		// 			<br />
-		// 			Por favor, tente novamente mais tarde.
-		// 		</div>,
-		// 	);
-		// }
+		try {
+			const newUser = await createUserWithEmailAndPassword(auth, data.email, data.password);
+			await updateProfile(newUser.user, {
+				displayName: data.name,
+			});
+			toast.success('Cadastro realizado com sucesso.');
+			navigate('/dashboard', { replace: true });
+		} catch (error) {
+			console.log(error);
+			toast.error(
+				<div>
+					Erro ao criar conta!
+					<br />
+					Por favor, tente novamente mais tarde.
+				</div>,
+			);
+		}
 	}
 
 	return (
