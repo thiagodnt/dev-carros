@@ -15,6 +15,8 @@ interface UserProps {
 type AuthContextData = {
 	signed: boolean;
 	loadingAuth: boolean;
+	updateUserInfo: ({ name, email, uid }: UserProps) => void;
+	user: UserProps | null;
 };
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -24,12 +26,12 @@ function AuthProvider({ children }: AuthProviderProps) {
 	const [loadingAuth, setLoadingAuth] = useState(true);
 
 	useEffect(() => {
-		const unsub = onAuthStateChanged(auth, (user) => {
-			if (user) {
+		const unsub = onAuthStateChanged(auth, (AuthenticatedUser) => {
+			if (AuthenticatedUser) {
 				setUser({
-					uid: user.uid,
-					name: user?.displayName,
-					email: user?.email,
+					uid: AuthenticatedUser.uid,
+					name: AuthenticatedUser?.displayName,
+					email: AuthenticatedUser?.email,
 				});
 			} else {
 				setUser(null);
@@ -42,11 +44,21 @@ function AuthProvider({ children }: AuthProviderProps) {
 		};
 	}, []);
 
+	function updateUserInfo({ name, email, uid }: UserProps) {
+		setUser({
+			name,
+			email,
+			uid,
+		});
+	}
+
 	return (
 		<AuthContext.Provider
 			value={{
 				signed: !!user,
 				loadingAuth,
+				updateUserInfo,
+				user,
 			}}
 		>
 			{children}

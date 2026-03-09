@@ -11,6 +11,8 @@ import { Button } from '../../components/button';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 type FormData = z.infer<typeof schema>;
 
@@ -25,6 +27,7 @@ const schema = z.object({
 
 export function Register() {
 	const navigate = useNavigate();
+	const { updateUserInfo } = useContext(AuthContext);
 
 	const {
 		register,
@@ -41,6 +44,13 @@ export function Register() {
 			await updateProfile(newUser.user, {
 				displayName: data.name,
 			});
+
+			updateUserInfo({
+				uid: newUser.user.uid,
+				name: data.name,
+				email: data.email,
+			});
+
 			toast.success('Cadastro realizado com sucesso.');
 			navigate('/dashboard', { replace: true });
 		} catch (error) {
