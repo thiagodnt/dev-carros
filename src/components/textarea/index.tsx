@@ -11,7 +11,7 @@ export function TextArea({ error, ...rest }: TextAreaProps) {
 				className="w-full border-2 border-zinc-400 focus:border-zinc-600 rounded-md px-2 outline-none transition-all duration-200 resize-none"
 				{...rest}
 			/>
-			{error && <p className="text-red-600 my-1">{error}</p>}
+			{error && <p className="text-red-600 mb-1">{error}</p>}
 		</div>
 	);
 }
