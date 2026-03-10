@@ -19,7 +19,7 @@ export function Header() {
 	}
 
 	return (
-		<div className="w-full flex justify-center items-center bg-white mb-2">
+		<div className="w-full flex justify-center items-center bg-white mb-4">
 			<header className="w-full max-w-7xl flex justify-between items-center px-2">
 				<Link to="/">
 					<img className="w-40 h-16 object-contain" src={logo} alt="Logo DevCarros" />
