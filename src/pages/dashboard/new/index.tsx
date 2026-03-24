@@ -57,7 +57,7 @@ export function RegisterNewCar() {
 			</div>
 
 			<div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row">
-				<form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+				<form className="w-full flex flex-col" onSubmit={handleSubmit(onSubmit)}>
 					<div className="w-full flex items-center mb-3 gap-4">
 						<div className="w-full">
 							<p className="mb-2 font-medium">Nome do carro</p>

@@ -9,7 +9,9 @@ export function Home() {
 				<Input type="text" placeholder="Pesquisar carro..." />
 				<Button>Buscar</Button>
 			</section>
-			<h1 className="font-bold text-center my-6 text-2xl">Carros novos e usados em todo o Brasil</h1>
+			<h1 className="font-bold text-center my-6 text-2xl">
+				Carros novos e usados em todo o Brasil
+			</h1>
 			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 				<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl">
 					<img
