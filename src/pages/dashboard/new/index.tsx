@@ -7,6 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../../../components/input';
 import { TextArea } from '../../../components/textarea';
 import { Button } from '../../../components/button';
+import { useContext, type ChangeEvent } from 'react';
+import toast from 'react-hot-toast';
+import { AuthContext } from '../../../contexts/AuthContext';
+import { uploadFile } from '../../../services/upload';
 
 const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),
@@ -27,11 +31,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function RegisterNewCar() {
+	const { user } = useContext(AuthContext);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-		reset,
 	} = useForm<FormData>({
 		resolver: zodResolver(schema),
 		mode: 'onBlur',
@@ -39,6 +44,28 @@ export function RegisterNewCar() {
 
 	function onSubmit(data: FormData) {
 		console.log(data);
+	}
+
+	async function handleFile(e: ChangeEvent<HTMLInputElement>) {
+		if (e.target?.files && e.target?.files[0]) {
+			const file = e.target.files[0];
+			const allowedTypes = ['image/jpeg', 'image/png'];
+
+			if (!allowedTypes.includes(file.type)) {
+				toast.error('A imagem deve estar em dos seguintes formatos: .png ou .jpeg');
+				return;
+			}
+
+			await handleUpload(file);
+		}
+	}
+
+	async function handleUpload(file: File) {
+		if (!user?.uid) {
+			return;
+		}
+
+		await uploadFile(file, user.uid);
 	}
 
 	return (
@@ -51,7 +78,12 @@ export function RegisterNewCar() {
 						<FiUpload size={30} color="#000" />
 					</div>
 					<div className="cursor-pointer">
-						<input type="file" accept="image/*" className="opacity-0 cursor-pointer" />
+						<input
+							type="file"
+							accept="image/*"
+							className="opacity-0 cursor-pointer"
+							onChange={handleFile}
+						/>
 					</div>
 				</button>
 			</div>
