@@ -10,7 +10,7 @@ export async function uploadFile(file: File, uid: string) {
 
 	formData.append('file', file);
 	formData.append('upload_preset', import.meta.env.VITE_STORAGE_PRESET);
-	formData.append('folder', uid);
+	formData.append('folder', `dev-carros/${uid}`);
 	formData.append('public_id', uuidV4());
 
 	const { data } = await api.post<UploadResponse>('/auto/upload', formData);
