@@ -94,6 +94,18 @@ export function RegisterNewCar() {
 		setCarImages((prev) => prev.filter((car) => car.name !== item.name));
 	}
 
+	function optimizeImage(url: string) {
+		return url.replace('/upload/', '/upload/f_auto/');
+	}
+
+	function getImageSrc(car: CarImageProps) {
+		if (car.storageUrl) {
+			return optimizeImage(car.storageUrl);
+		}
+
+		return car.previewUrl;
+	}
+
 	return (
 		<Container>
 			<Panel />
@@ -124,7 +136,7 @@ export function RegisterNewCar() {
 							<FaTrash size={28} color="#FFF" />
 						</IconButton>
 						<img
-							src={car.previewUrl}
+							src={getImageSrc(car)}
 							alt="Foto do carro"
 							className="w-full h-32 object-cover transition-transform duration-300 hover:scale-110"
 						/>

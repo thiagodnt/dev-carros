@@ -19,7 +19,7 @@ export async function uploadFile(file: File, uid: string): Promise<UploadFileRes
 	formData.append('folder', `dev-carros/${uid}`);
 	formData.append('public_id', filename);
 
-	const { data } = await api.post<UploadResponse>('/auto/upload', formData);
+	const { data } = await api.post<UploadResponse>('/auto/upload/', formData);
 
 	return {
 		url: data.secure_url,
