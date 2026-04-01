@@ -1,4 +1,5 @@
 import { FiUpload } from 'react-icons/fi';
+import { FaTrash } from 'react-icons/fa';
 import { Container } from '../../../components/container';
 import { Panel } from '../../../components/panel';
 import z from 'zod';
@@ -7,10 +8,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../../../components/input';
 import { TextArea } from '../../../components/textarea';
 import { Button } from '../../../components/button';
-import { useContext, type ChangeEvent } from 'react';
+import { useContext, useState, type ChangeEvent } from 'react';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { uploadFile } from '../../../services/upload';
+import { IconButton } from '../../../components/iconButton';
 
 const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),
@@ -30,8 +32,16 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+interface CarImageProps {
+	name: string;
+	uid: string;
+	previewUrl: string;
+	storageUrl: string;
+}
+
 export function RegisterNewCar() {
 	const { user } = useContext(AuthContext);
+	const [carImages, setCarImages] = useState<CarImageProps[]>([]);
 
 	const {
 		register,
@@ -65,7 +75,23 @@ export function RegisterNewCar() {
 			return;
 		}
 
-		await uploadFile(file, user.uid);
+		try {
+			const data = await uploadFile(file, user.uid);
+			const newImageItem: CarImageProps = {
+				name: data.name,
+				uid: user.uid,
+				previewUrl: URL.createObjectURL(file),
+				storageUrl: data.url,
+			};
+
+			setCarImages((images) => [...images, newImageItem]);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	function handleDeleteImage(item: CarImageProps) {
+		setCarImages((prev) => prev.filter((car) => car.name !== item.name));
 	}
 
 	return (
@@ -77,15 +103,33 @@ export function RegisterNewCar() {
 					<div className="absolute cursor-pointer">
 						<FiUpload size={30} color="#000" />
 					</div>
-					<div className="cursor-pointer">
+					<div className="cursor-pointer h-full">
 						<input
 							type="file"
 							accept="image/*"
-							className="opacity-0 cursor-pointer"
+							className="opacity-0 cursor-pointer h-full"
 							onChange={handleFile}
 						/>
 					</div>
 				</button>
+				{carImages.map((car) => (
+					<div
+						key={car.name}
+						className="w-full h-32 rounded-lg flex items-center justify-center overflow-hidden relative"
+					>
+						<IconButton
+							className="absolute cursor-pointer z-10"
+							onClick={() => handleDeleteImage(car)}
+						>
+							<FaTrash size={28} color="#FFF" />
+						</IconButton>
+						<img
+							src={car.previewUrl}
+							alt="Foto do carro"
+							className="w-full h-32 object-cover transition-transform duration-300 hover:scale-110"
+						/>
+					</div>
+				))}
 			</div>
 
 			<div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row">
