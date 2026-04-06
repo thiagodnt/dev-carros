@@ -60,7 +60,7 @@ export function RegisterNewCar() {
 			return {
 				name: car.name,
 				uid: car.uid,
-				storageUrl: car.storageUrl,
+				storage_url: car.storageUrl,
 			};
 		});
 
@@ -76,7 +76,7 @@ export function RegisterNewCar() {
 			description: data.description,
 			created_at: new Date(),
 			owner: user?.name,
-			ownerUid: user?.uid,
+			owner_uid: user?.uid,
 		})
 			.then(() => {
 				reset();
