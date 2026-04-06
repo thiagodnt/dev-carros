@@ -13,6 +13,8 @@ import toast from 'react-hot-toast';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { uploadFile } from '../../../services/upload';
 import { IconButton } from '../../../components/iconButton';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../services/firebaseConnection';
 
 const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),
@@ -47,15 +49,47 @@ export function RegisterNewCar() {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
+		reset,
 	} = useForm<FormData>({
 		resolver: zodResolver(schema),
 		mode: 'onBlur',
 	});
 
-	function onSubmit(data: FormData) {
-		console.log(data);
+	async function onSubmit(data: FormData) {
+		const images = carImages.map((car) => {
+			return {
+				name: car.name,
+				uid: car.uid,
+				storageUrl: car.storageUrl,
+			};
+		});
+
+		addDoc(collection(db, 'cars'), {
+			images: images,
+			name: data.name,
+			model: data.model,
+			year: data.year,
+			km: data.km,
+			price: data.price,
+			city: data.city,
+			whatsapp: data.whatsapp,
+			description: data.description,
+			created_at: new Date(),
+			owner: user?.name,
+			ownerUid: user?.uid,
+		})
+			.then(() => {
+				reset();
+				setCarImages([]);
+				toast.success('Carro cadastrado com sucesso!');
+			})
+			.catch((error) => {
+				console.log(error);
+				toast.error('Erro ao cadastrar carro. Por favor, tente novamente mais tarde');
+			});
 	}
 
+	// Se deletar e tentar fazer o upload da mesma foto que foi deletada, não acontece nada (Provalvelmente por conta do evento que é OnChange)
 	async function handleFile(e: ChangeEvent<HTMLInputElement>) {
 		if (e.target?.files && e.target?.files[0]) {
 			const file = e.target.files[0];
