@@ -63,30 +63,29 @@ export function RegisterNewCar() {
 				storage_url: car.storageUrl,
 			};
 		});
-
-		addDoc(collection(db, 'cars'), {
-			images: images,
-			name: data.name,
-			model: data.model,
-			year: data.year,
-			km: data.km,
-			price: data.price,
-			city: data.city,
-			whatsapp: data.whatsapp,
-			description: data.description,
-			created_at: new Date(),
-			owner: user?.name,
-			owner_uid: user?.uid,
-		})
-			.then(() => {
-				reset();
-				setCarImages([]);
-				toast.success('Carro cadastrado com sucesso!');
-			})
-			.catch((error) => {
-				console.log(error);
-				toast.error('Erro ao cadastrar carro. Por favor, tente novamente mais tarde');
+		try {
+			await addDoc(collection(db, 'cars'), {
+				images: images,
+				name: data.name,
+				model: data.model,
+				year: data.year,
+				km: data.km,
+				price: data.price,
+				city: data.city,
+				whatsapp: data.whatsapp,
+				description: data.description,
+				created_at: new Date(),
+				owner: user?.name,
+				owner_uid: user?.uid,
 			});
+
+			reset();
+			setCarImages([]);
+			toast.success('Carro cadastrado com sucesso!');
+		} catch (error) {
+			console.log(error);
+			toast.error('Erro ao cadastrar carro. Por favor, tente novamente mais tarde');
+		}
 	}
 
 	// Se deletar e tentar fazer o upload da mesma foto que foi deletada, não acontece nada (Provalvelmente por conta do evento que é OnChange)
