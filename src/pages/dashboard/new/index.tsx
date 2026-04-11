@@ -15,6 +15,7 @@ import { uploadFile } from '../../../services/upload';
 import { IconButton } from '../../../components/iconButton';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../services/firebaseConnection';
+import { LoaderOverlay } from '../../../components/loader/overlay';
 
 const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),
@@ -44,6 +45,7 @@ interface CarImageProps {
 export function RegisterNewCar() {
 	const { user } = useContext(AuthContext);
 	const [carImages, setCarImages] = useState<CarImageProps[]>([]);
+	const [loadingUpload, setLoadingUpload] = useState(false);
 
 	const {
 		register,
@@ -108,6 +110,8 @@ export function RegisterNewCar() {
 			return;
 		}
 
+		setLoadingUpload(true);
+
 		try {
 			const data = await uploadFile(file, user.uid);
 			const newImageItem: CarImageProps = {
@@ -120,6 +124,8 @@ export function RegisterNewCar() {
 			setCarImages((images) => [...images, newImageItem]);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoadingUpload(false);
 		}
 	}
 
@@ -142,6 +148,8 @@ export function RegisterNewCar() {
 	return (
 		<Container>
 			<Panel />
+
+			{loadingUpload && <LoaderOverlay />}
 
 			<div className="w-full bg-white p-3 mb-4 rounded-lg flex flex-col sm:flex-row items-center gap-2">
 				<button className="border-2 h-32 w-48 rounded-lg flex items-center justify-center cursor-pointer border-gray-600">
@@ -168,6 +176,7 @@ export function RegisterNewCar() {
 						>
 							<FaTrash size={28} color="#FFF" />
 						</IconButton>
+
 						<img
 							src={getImageSrc(car)}
 							alt="Foto do carro"
