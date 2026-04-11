@@ -1,8 +1,63 @@
+import { useEffect, useState } from 'react';
 import { Button } from '../../components/button';
 import { Container } from '../../components/container';
 import { Input } from '../../components/input';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../../services/firebaseConnection';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router';
+
+interface CarProps {
+	id: string;
+	ownerUid: string;
+	city: string;
+	name: string;
+	year: string | number;
+	km: number;
+	price: number;
+	images: CarImageDTO[];
+}
+
+interface CarImageDTO {
+	name: string;
+	owner_uid: string;
+	storage_url: string;
+}
 
 export function Home() {
+	const [cars, setCars] = useState<CarProps[]>([]);
+
+	useEffect(() => {
+		async function getCars() {
+			const carsRef = collection(db, 'cars');
+			const queryRef = query(carsRef, orderBy('created_at', 'desc'));
+
+			try {
+				let carsList = [] as CarProps[];
+				const snapshot = await getDocs(queryRef);
+				snapshot.forEach((doc) => {
+					carsList.push({
+						id: doc.id,
+						ownerUid: doc.data().owner_uid,
+						city: doc.data().city,
+						name: doc.data().name,
+						year: doc.data().year,
+						km: doc.data().km,
+						price: doc.data().price,
+						images: doc.data().images,
+					});
+				});
+
+				setCars(carsList);
+			} catch (error) {
+				console.log(error);
+				toast.error('Erro ao obter os carros disponíveis');
+			}
+		}
+
+		getCars();
+	}, []);
+
 	return (
 		<Container>
 			<section className="bg-white p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-4">
@@ -12,27 +67,38 @@ export function Home() {
 			<h1 className="font-bold text-center my-6 text-2xl">
 				Carros novos e usados em todo o Brasil
 			</h1>
-			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-				<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl">
-					<img
-						src="https://www.webmotors.com.br/wp-content/uploads/2022/11/17191500/Hyundai-HB20-x-Citroen-C3-Feel-76-scaled-1-e1673877183852.jpg"
-						alt="Carro"
-						className="w-full h-auto object-cover rounded-t-lg"
-					/>
+			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+				{cars.map((car) => (
+					<Link key={car.id} to={`/car/${car.id}`}>
+						<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl">
+							<img
+								src={car.images[0].storage_url}
+								alt="Carro"
+								className="w-full h-48 object-cover rounded-t-lg"
+							/>
 
-					<p className="font-bold mt-1 px-2">Hyundai HB20</p>
+							<p className="font-bold mt-1 px-2">{car.name}</p>
 
-					<div className="flex flex-col px-2">
-						<span className="text-zinc-700 mb-4">Ano 2016/2016 | 23.000 km</span>
-						<strong className="font-medium text-xl">R$ 240.000</strong>
-					</div>
+							<div className="flex flex-col px-2">
+								<span className="text-zinc-700 mb-4">
+									Ano {car.year} | {car.km} km
+								</span>
+								<strong className="font-medium text-xl">
+									{Number(car.price).toLocaleString('pt-BR', {
+										style: 'currency',
+										currency: 'BRL',
+									})}
+								</strong>
+							</div>
 
-					<div className="w-full bg-zinc-300 h-px my-2"></div>
+							<div className="w-full bg-zinc-300 h-px my-2"></div>
 
-					<div className="px-2 pb-2">
-						<span className="text-zinc-700">São Paulo - SP</span>
-					</div>
-				</section>
+							<div className="px-2 pb-2">
+								<span className="text-zinc-700">{car.city}</span>
+							</div>
+						</section>
+					</Link>
+				))}
 			</main>
 		</Container>
 	);

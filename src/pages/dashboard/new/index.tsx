@@ -36,7 +36,7 @@ type FormData = z.infer<typeof schema>;
 
 interface CarImageProps {
 	name: string;
-	uid: string;
+	ownerUid: string;
 	previewUrl: string;
 	storageUrl: string;
 }
@@ -59,7 +59,7 @@ export function RegisterNewCar() {
 		const images = carImages.map((car) => {
 			return {
 				name: car.name,
-				uid: car.uid,
+				owner_uid: car.ownerUid,
 				storage_url: car.storageUrl,
 			};
 		});
@@ -112,7 +112,7 @@ export function RegisterNewCar() {
 			const data = await uploadFile(file, user.uid);
 			const newImageItem: CarImageProps = {
 				name: data.name,
-				uid: user.uid,
+				ownerUid: user.uid,
 				previewUrl: URL.createObjectURL(file),
 				storageUrl: data.url,
 			};
