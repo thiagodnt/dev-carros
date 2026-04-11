@@ -7,6 +7,7 @@ import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router';
 import { Spinner } from '../../components/loader/spinner';
+import { Panel } from '../../components/panel';
 
 interface CarProps {
 	id: string;
@@ -66,6 +67,7 @@ export function Home() {
 
 	return (
 		<Container>
+			<Panel />
 			<section className="bg-white p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-4">
 				<Input type="text" placeholder="Pesquisar carro..." />
 				<Button>Buscar</Button>
