@@ -6,6 +6,7 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router';
+import { Spinner } from '../../components/loader/spinner';
 
 interface CarProps {
 	id: string;
@@ -26,6 +27,7 @@ interface CarImageDTO {
 
 export function Home() {
 	const [cars, setCars] = useState<CarProps[]>([]);
+	const [loadedImages, setLoadedImages] = useState<string[]>([]);
 
 	useEffect(() => {
 		async function getCars() {
@@ -58,6 +60,10 @@ export function Home() {
 		getCars();
 	}, []);
 
+	function handleLoadedImages(id: string) {
+		setLoadedImages((prevLoadedImages) => [...prevLoadedImages, id]);
+	}
+
 	return (
 		<Container>
 			<section className="bg-white p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-4">
@@ -71,10 +77,18 @@ export function Home() {
 				{cars.map((car) => (
 					<Link key={car.id} to={`/car/${car.id}`}>
 						<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl">
+							<div
+								className="w-full h-48 flex justify-center items-center bg-zinc-200"
+								style={{ display: loadedImages.includes(car.id) ? 'none' : 'flex' }}
+							>
+								<Spinner />
+							</div>
 							<img
 								src={car.images[0].storage_url}
-								alt="Carro"
+								alt={car.name}
 								className="w-full h-48 object-cover rounded-t-lg"
+								onLoad={() => handleLoadedImages(car.id)}
+								style={{ display: loadedImages.includes(car.id) ? 'block' : 'none' }}
 							/>
 
 							<p className="font-bold mt-1 px-2">{car.name}</p>
