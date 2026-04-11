@@ -56,11 +56,11 @@ export function RegisterNewCar() {
 	});
 
 	async function onSubmit(data: FormData) {
-		const images = carImages.map((car) => {
+		const images = carImages.map((carImage) => {
 			return {
-				name: car.name,
-				owner_uid: car.ownerUid,
-				storage_url: car.storageUrl,
+				name: carImage.name,
+				owner_uid: carImage.ownerUid,
+				storage_url: carImage.storageUrl,
 			};
 		});
 		try {
