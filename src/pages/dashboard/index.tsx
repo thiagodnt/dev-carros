@@ -3,9 +3,10 @@ import { Container } from '../../components/Container';
 import { Panel } from '../../components/Panel';
 import type { CarProps } from '../../types/car';
 import { AuthContext } from '../../contexts/AuthContext';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import { CarCard } from '../../components/CarCard';
+import toast from 'react-hot-toast';
 
 export function Dashboard() {
 	const [cars, setCars] = useState<CarProps[]>([]);
@@ -47,6 +48,18 @@ export function Dashboard() {
 		setLoadedImages((prevLoadedImages) => [...prevLoadedImages, id]);
 	}
 
+	async function handleDelete(id: string) {
+		const docRef = doc(db, 'cars', id);
+		try {
+			await deleteDoc(docRef);
+			setCars((prevCars) => prevCars.filter((car) => car.id !== id));
+			toast.success('Anúncio deletado com sucesso');
+		} catch (error) {
+			console.log(error);
+			toast.error('Erro ao deletar o anúncio. Por favor, tente novamente mais tarde');
+		}
+	}
+
 	return (
 		<Container>
 			<Panel />
@@ -57,9 +70,11 @@ export function Dashboard() {
 						city={car.city}
 						id={car.id}
 						imageUrl={car.images[0].storage_url}
-						isLoaded={loadedImages.includes(car.id)}
+						isImageLoaded={loadedImages.includes(car.id)}
 						km={car.km}
 						name={car.name}
+						showIcon={true}
+						handleDelete={handleDelete}
 						onLoad={handleLoadedImages}
 						price={car.price}
 						year={car.year}

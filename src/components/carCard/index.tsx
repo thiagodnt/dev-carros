@@ -9,23 +9,27 @@ interface CarCardProps {
 	price: number;
 	city: string;
 	imageUrl: string;
-	isLoaded: boolean;
+	showIcon: boolean;
+	isImageLoaded: boolean;
+	handleDelete?: (id: string) => void;
 	onLoad: (id: string) => void;
 }
 
 export function CarCard(props: CarCardProps) {
 	return (
 		<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl relative">
-			<button
-				type="button"
-				className="absolute bg-white rounded-full p-2 cursor-pointer z-10 right-1 top-1 shadow-xl"
-				onClick={() => {}}
-			>
-				<FiTrash2 size={24} color="#000" />
-			</button>
+			{props.showIcon && (
+				<button
+					type="button"
+					className="absolute bg-white rounded-full p-2 cursor-pointer z-10 right-1 top-1 shadow-xl"
+					onClick={() => props.handleDelete?.(props.id)}
+				>
+					<FiTrash2 size={24} color="#000" />
+				</button>
+			)}
 			<div
 				className="w-full h-48 flex justify-center items-center bg-zinc-200"
-				style={{ display: props.isLoaded ? 'none' : 'flex' }}
+				style={{ display: props.isImageLoaded ? 'none' : 'flex' }}
 			>
 				<Spinner />
 			</div>
@@ -34,7 +38,7 @@ export function CarCard(props: CarCardProps) {
 				alt={props.name}
 				className="w-full h-48 object-cover rounded-t-lg"
 				onLoad={() => props.onLoad(props.id)}
-				style={{ display: props.isLoaded ? 'block' : 'none' }}
+				style={{ display: props.isImageLoaded ? 'block' : 'none' }}
 			/>
 
 			<p className="font-bold mt-1 px-2">{props.name}</p>

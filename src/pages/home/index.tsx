@@ -66,9 +66,10 @@ export function Home() {
 							city={car.city}
 							id={car.id}
 							imageUrl={car.images[0].storage_url}
-							isLoaded={loadedImages.includes(car.id)}
+							isImageLoaded={loadedImages.includes(car.id)}
 							km={car.km}
 							name={car.name}
+							showIcon={false}
 							onLoad={handleLoadedImages}
 							price={car.price}
 							year={car.year}
