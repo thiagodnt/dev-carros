@@ -13,7 +13,7 @@ export function Panel() {
 				to="/dashboard"
 				className="py-1 px-2 rounded-lg hover:bg-red-700 transition-colors duration-500"
 			>
-				Meus Carros
+				Meus Anúncios
 			</Link>
 			<Link
 				to="/dashboard/new"

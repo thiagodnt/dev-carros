@@ -3,7 +3,6 @@ import logo from '../../assets/logo.png';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { IconButton } from '../IconButton';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
@@ -25,15 +24,18 @@ export function Header() {
 					<img className="w-40 h-16 object-contain" src={logo} alt="Logo DevCarros" />
 				</Link>
 				{!loadingAuth && signed && (
-					<IconButton onClick={handleLogout}>
+					<button
+						className="border-2 border-gray-900 rounded-full p-1 cursor-pointer"
+						onClick={handleLogout}
+					>
 						<FiLogOut size={22} color="#101828" />
-					</IconButton>
+					</button>
 				)}
 
 				{!loadingAuth && !signed && (
-					<IconButton to="/login">
+					<Link className="border-2 border-gray-900 rounded-full p-1" to="/login">
 						<FiLogIn size={22} color="#101828" />
-					</IconButton>
+					</Link>
 				)}
 			</header>
 		</div>

@@ -5,11 +5,10 @@ import { Input } from '../../components/Input';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router';
-import { Spinner } from '../../components/Loader/spinner';
 import { Panel } from '../../components/Panel';
-import type { CarProps, CarImageDTO } from '../../types/car';
+import type { CarProps } from '../../types/car';
 import { CarCard } from '../../components/CarCard';
+import { Link } from 'react-router';
 
 export function Home() {
 	const [cars, setCars] = useState<CarProps[]>([]);
@@ -62,18 +61,19 @@ export function Home() {
 			</h1>
 			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
 				{cars.map((car) => (
-					<CarCard
-						city={car.city}
-						id={car.id}
-						imageUrl={car.images[0].storage_url}
-						isLoaded={loadedImages.includes(car.id)}
-						km={car.km}
-						name={car.name}
-						onLoad={handleLoadedImages}
-						price={car.price}
-						year={car.year}
-						key={car.id}
-					/>
+					<Link to={`/car/${car.id}`} key={car.id}>
+						<CarCard
+							city={car.city}
+							id={car.id}
+							imageUrl={car.images[0].storage_url}
+							isLoaded={loadedImages.includes(car.id)}
+							km={car.km}
+							name={car.name}
+							onLoad={handleLoadedImages}
+							price={car.price}
+							year={car.year}
+						/>
+					</Link>
 				))}
 			</main>
 		</Container>

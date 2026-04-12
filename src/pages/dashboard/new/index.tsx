@@ -12,7 +12,6 @@ import { useContext, useState, type ChangeEvent } from 'react';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { uploadFile } from '../../../services/upload';
-import { IconButton } from '../../../components/IconButton';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../services/firebaseConnection';
 import { LoaderOverlay } from '../../../components/Loader/overlay';
@@ -170,12 +169,13 @@ export function RegisterNewCar() {
 						key={car.name}
 						className="w-full h-32 rounded-lg flex items-center justify-center overflow-hidden relative"
 					>
-						<IconButton
+						<button
+							type="button"
 							className="absolute cursor-pointer z-10"
 							onClick={() => handleDeleteImage(car)}
 						>
 							<FaTrash size={28} color="#FFF" />
-						</IconButton>
+						</button>
 
 						<img
 							src={getImageSrc(car)}
