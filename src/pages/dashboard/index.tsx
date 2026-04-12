@@ -7,9 +7,11 @@ import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/fire
 import { db } from '../../services/firebaseConnection';
 import { CarCard } from '../../components/CarCard';
 import toast from 'react-hot-toast';
+import { FaCarSide } from 'react-icons/fa';
 
 export function Dashboard() {
 	const [cars, setCars] = useState<CarProps[]>([]);
+	const [loading, setLoading] = useState(true);
 	const [loadedImages, setLoadedImages] = useState<string[]>([]);
 	const { user } = useContext(AuthContext);
 
@@ -23,22 +25,29 @@ export function Dashboard() {
 			const queryRef = query(carsRef, where('owner_uid', '==', user.uid));
 
 			let carsList = [] as CarProps[];
-			const snapshot = await getDocs(queryRef);
+			try {
+				const snapshot = await getDocs(queryRef);
 
-			snapshot.forEach((doc) => {
-				carsList.push({
-					id: doc.id,
-					ownerUid: doc.data().owner_uid,
-					city: doc.data().city,
-					name: doc.data().name,
-					year: doc.data().year,
-					km: doc.data().km,
-					price: doc.data().price,
-					images: doc.data().images,
+				snapshot.forEach((doc) => {
+					carsList.push({
+						id: doc.id,
+						ownerUid: doc.data().owner_uid,
+						city: doc.data().city,
+						name: doc.data().name,
+						year: doc.data().year,
+						km: doc.data().km,
+						price: doc.data().price,
+						images: doc.data().images,
+					});
 				});
-			});
 
-			setCars(carsList);
+				setCars(carsList);
+			} catch (error) {
+				console.log(error);
+				toast.error('Erro ao obter anúncios. Por favor, tente novamente mais tarde');
+			} finally {
+				setLoading(false);
+			}
 		}
 
 		getUserCars();
@@ -64,6 +73,15 @@ export function Dashboard() {
 		<Container>
 			<Panel />
 			<h1 className="font-bold text-center my-6 text-2xl">Meus anúncios</h1>
+			{!loading && cars.length === 0 && (
+				<main className="w-full max-w-lg flex flex-col items-center justify-center mx-auto bg-zinc-200 rounded-2xl gap-4 p-8">
+					<div className="bg-zinc-400/40 p-4 rounded-full">
+						<FaCarSide size={32} color="#212121" />
+					</div>
+					<hr className="w-32 border-zinc-400/20" />
+					<p className="text-zinc-500">Nenhum anúncio encontrado</p>
+				</main>
+			)}
 			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
 				{cars.map((car) => (
 					<CarCard
