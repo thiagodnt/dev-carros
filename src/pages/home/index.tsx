@@ -8,23 +8,8 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router';
 import { Spinner } from '../../components/loader/spinner';
 import { Panel } from '../../components/panel';
-
-interface CarProps {
-	id: string;
-	ownerUid: string;
-	city: string;
-	name: string;
-	year: string | number;
-	km: number;
-	price: number;
-	images: CarImageDTO[];
-}
-
-interface CarImageDTO {
-	name: string;
-	owner_uid: string;
-	storage_url: string;
-}
+import type { CarProps, CarImageDTO } from '../../types/car';
+import { CarCard } from '../../components/carCard';
 
 export function Home() {
 	const [cars, setCars] = useState<CarProps[]>([]);
@@ -77,43 +62,18 @@ export function Home() {
 			</h1>
 			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
 				{cars.map((car) => (
-					<Link key={car.id} to={`/car/${car.id}`}>
-						<section className="w-full bg-white rounded-lg hover:scale-105 transition-all duration-300 shadow-xl">
-							<div
-								className="w-full h-48 flex justify-center items-center bg-zinc-200"
-								style={{ display: loadedImages.includes(car.id) ? 'none' : 'flex' }}
-							>
-								<Spinner />
-							</div>
-							<img
-								src={car.images[0].storage_url}
-								alt={car.name}
-								className="w-full h-48 object-cover rounded-t-lg"
-								onLoad={() => handleLoadedImages(car.id)}
-								style={{ display: loadedImages.includes(car.id) ? 'block' : 'none' }}
-							/>
-
-							<p className="font-bold mt-1 px-2">{car.name}</p>
-
-							<div className="flex flex-col px-2">
-								<span className="text-zinc-700 mb-4">
-									Ano {car.year} | {car.km} km
-								</span>
-								<strong className="font-medium text-xl">
-									{Number(car.price).toLocaleString('pt-BR', {
-										style: 'currency',
-										currency: 'BRL',
-									})}
-								</strong>
-							</div>
-
-							<div className="w-full bg-zinc-300 h-px my-2"></div>
-
-							<div className="px-2 pb-2">
-								<span className="text-zinc-700">{car.city}</span>
-							</div>
-						</section>
-					</Link>
+					<CarCard
+						city={car.city}
+						id={car.id}
+						imageUrl={car.images[0].storage_url}
+						isLoaded={loadedImages.includes(car.id)}
+						km={car.km}
+						name={car.name}
+						onLoad={handleLoadedImages}
+						price={car.price}
+						year={car.year}
+						key={car.id}
+					/>
 				))}
 			</main>
 		</Container>
