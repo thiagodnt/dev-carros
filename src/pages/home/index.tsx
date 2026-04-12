@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../../components/button';
-import { Container } from '../../components/container';
-import { Input } from '../../components/input';
+import { Button } from '../../components/Button';
+import { Container } from '../../components/Container';
+import { Input } from '../../components/Input';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router';
-import { Spinner } from '../../components/loader/spinner';
-import { Panel } from '../../components/panel';
+import { Spinner } from '../../components/Loader/spinner';
+import { Panel } from '../../components/Panel';
 import type { CarProps, CarImageDTO } from '../../types/car';
-import { CarCard } from '../../components/carCard';
+import { CarCard } from '../../components/CarCard';
 
 export function Home() {
 	const [cars, setCars] = useState<CarProps[]>([]);

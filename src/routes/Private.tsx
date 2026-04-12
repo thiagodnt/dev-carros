@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Navigate, Outlet } from 'react-router';
-import { LoaderOverlay } from '../components/loader/overlay';
+import { LoaderOverlay } from '../components/Loader/overlay';
 
 export function Private() {
 	const { signed, loadingAuth } = useContext(AuthContext);

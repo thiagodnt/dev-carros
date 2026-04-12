@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router';
-import { Layout } from './components/layout';
-import { Home } from './pages/home';
-import { CarDetails } from './pages/car';
-import { Dashboard } from './pages/dashboard';
-import { RegisterNewCar } from './pages/dashboard/new';
-import { Login } from './pages/login';
-import { Register } from './pages/register';
+import { Layout } from './components/Layout';
+import { Home } from './pages/Home';
+import { CarDetails } from './pages/Car';
+import { Dashboard } from './pages/Dashboard';
+import { RegisterNewCar } from './pages/Dashboard/New';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { Private } from './routes/Private';
 
 export const router = createBrowserRouter([

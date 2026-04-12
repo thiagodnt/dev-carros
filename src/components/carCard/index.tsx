@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { Spinner } from '../loader/spinner';
+import { Spinner } from '../Loader/spinner';
 
 interface CarCardProps {
 	id: string;

@@ -1,21 +1,21 @@
 import { FiUpload } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
-import { Container } from '../../../components/container';
-import { Panel } from '../../../components/panel';
+import { Container } from '../../../components/Container';
+import { Panel } from '../../../components/Panel';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../../../components/input';
-import { TextArea } from '../../../components/textarea';
-import { Button } from '../../../components/button';
+import { Input } from '../../../components/Input';
+import { TextArea } from '../../../components/Textarea';
+import { Button } from '../../../components/Button';
 import { useContext, useState, type ChangeEvent } from 'react';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { uploadFile } from '../../../services/upload';
-import { IconButton } from '../../../components/iconButton';
+import { IconButton } from '../../../components/IconButton';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../services/firebaseConnection';
-import { LoaderOverlay } from '../../../components/loader/overlay';
+import { LoaderOverlay } from '../../../components/Loader/overlay';
 
 const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),

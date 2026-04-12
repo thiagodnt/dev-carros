@@ -2,13 +2,13 @@ import logo from '../../assets/logo.png';
 import toast from 'react-hot-toast';
 
 import { Link, useNavigate } from 'react-router';
-import { Container } from '../../components/container';
-import { Input } from '../../components/input';
+import { Container } from '../../components/Container';
+import { Input } from '../../components/Input';
 
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '../../components/button';
+import { Button } from '../../components/Button';
 
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../services/firebaseConnection';

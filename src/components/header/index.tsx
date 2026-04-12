@@ -3,7 +3,7 @@ import logo from '../../assets/logo.png';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { IconButton } from '../iconButton';
+import { IconButton } from '../IconButton';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
