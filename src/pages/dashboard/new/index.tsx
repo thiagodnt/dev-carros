@@ -20,8 +20,18 @@ const schema = z.object({
 	name: z.string().min(1, 'O campo nome é obrigatório'),
 	model: z.string().min(1, 'O campo modelo é obrigatório'),
 	year: z.string().min(1, 'O campo ano é obrigatório'),
-	km: z.string().min(1, 'O campo km é obrigatório'),
-	price: z.string().min(1, 'O campo preço é obrigatório'),
+	km: z
+		.string()
+		.min(1, 'O campo km é obrigatório')
+		.refine((value) => !isNaN(Number(value)), {
+			message: 'Informe um número válido',
+		}),
+	price: z
+		.string()
+		.min(1, 'O campo preço é obrigatório')
+		.refine((value) => !isNaN(Number(value)), {
+			message: 'Informe um número válido',
+		}),
 	city: z.string().min(1, 'O campo cidade é obrigatório'),
 	whatsapp: z
 		.string()
