@@ -9,10 +9,12 @@ import { Panel } from '../../components/Panel';
 import type { CarProps } from '../../types/car';
 import { CarCard } from '../../components/CarCard';
 import { Link } from 'react-router';
+import { LoaderOverlay } from '../../components/Loader/overlay';
 
 export function Home() {
 	const [cars, setCars] = useState<CarProps[]>([]);
 	const [loadedImages, setLoadedImages] = useState<string[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		async function getCars() {
@@ -39,6 +41,8 @@ export function Home() {
 			} catch (error) {
 				console.log(error);
 				toast.error('Erro ao obter os carros disponíveis');
+			} finally {
+				setLoading(false);
 			}
 		}
 
@@ -51,6 +55,7 @@ export function Home() {
 
 	return (
 		<Container>
+			{loading && <LoaderOverlay />}
 			<Panel />
 			<section className="bg-white p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-4">
 				<Input type="text" placeholder="Pesquisar carro..." />
