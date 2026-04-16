@@ -8,6 +8,7 @@ import { db } from '../../services/firebaseConnection';
 import { CarCard } from '../../components/CarCard';
 import toast from 'react-hot-toast';
 import { FaCarSide } from 'react-icons/fa';
+import { CarsEmptyState } from '../../components/CarsEmptyState';
 
 export function Dashboard() {
 	const [cars, setCars] = useState<CarProps[]>([]);
@@ -74,13 +75,10 @@ export function Dashboard() {
 			<Panel />
 			<h1 className="font-bold text-center my-6 text-2xl">Meus anúncios</h1>
 			{!loading && cars.length === 0 && (
-				<main className="w-full max-w-lg flex flex-col items-center justify-center mx-auto bg-zinc-200 rounded-2xl gap-4 p-8">
-					<div className="bg-zinc-400/40 p-4 rounded-full">
-						<FaCarSide size={32} color="#212121" />
-					</div>
-					<hr className="w-32 border-zinc-400/20" />
-					<p className="text-zinc-500">Nenhum anúncio encontrado</p>
-				</main>
+				<CarsEmptyState
+					icon={<FaCarSide size={32} color="#212121" />}
+					message="Nenhum anúncio encontrado"
+				/>
 			)}
 			<main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
 				{cars.map((car) => (
