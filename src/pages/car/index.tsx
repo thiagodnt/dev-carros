@@ -3,7 +3,7 @@ import { Container } from '../../components/Container';
 import { useEffect, useState } from 'react';
 import { Panel } from '../../components/Panel';
 import type { CarImageDTO } from '../../types/car';
-import { replace, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
@@ -85,6 +85,13 @@ export function CarDetails() {
 		};
 	}, []);
 
+	const whatsappUrl = car?.whatsapp
+		? `https://api.whatsapp.com/send?${new URLSearchParams({
+				phone: String(car?.whatsapp),
+				text: `Olá, vi esse ${car?.name} no DevCarros e fiquei interessado`,
+			})}`
+		: '';
+
 	return (
 		<Container>
 			{loading && <LoaderOverlay />}
@@ -149,7 +156,7 @@ export function CarDetails() {
 					<p>{car?.whatsapp}</p>
 
 					<a
-						href="#"
+						href={whatsappUrl}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="bg-green-500 hover:bg-green-600 w-full text-white flex items-center justify-center gap-2 mt-6 h-11 text-xl rounded-lg font-medium duration-300"
