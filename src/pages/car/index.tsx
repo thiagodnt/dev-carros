@@ -8,6 +8,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
 import { LoaderOverlay } from '../../components/Loader/overlay';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
 
 interface CarDTO {
 	city: string;
@@ -21,12 +23,14 @@ interface CarDTO {
 	price: number;
 	whatsapp: number;
 	year: string | number;
-	images: CarImageDTO;
+	images: CarImageDTO[];
 }
 
 export function CarDetails() {
 	const { id } = useParams();
 	const [car, setCar] = useState<CarDTO>();
+	const [loading, setLoading] = useState(true);
+	const [slidesPerView, setSlidesPerView] = useState(2);
 
 	useEffect(() => {
 		async function getCar() {
@@ -54,17 +58,49 @@ export function CarDetails() {
 			} catch (error) {
 				console.log(error);
 				toast.error('Erro ao obter detalhes do anúncio. Por favor, tente novamente mais tarde');
+			} finally {
+				setLoading(false);
 			}
 		}
 
 		getCar();
 	}, [id]);
 
+	useEffect(() => {
+		function handleResize() {
+			setSlidesPerView(window.innerWidth < 728 ? 1 : 2);
+		}
+
+		handleResize();
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
 	return (
 		<Container>
-			{!car && <LoaderOverlay />}
+			{loading && <LoaderOverlay />}
 			<Panel />
-			<h1>SLIDER</h1>
+			<div className="rounded-lg overflow-hidden">
+				<Swiper
+					slidesPerView={slidesPerView}
+					pagination={{ clickable: true }}
+					modules={[Navigation, Pagination]}
+					navigation
+				>
+					{car?.images.map((image) => (
+						<SwiperSlide key={image.name}>
+							<img
+								src={image.storage_url}
+								alt="Imagem do carro"
+								className="w-full h-96 object-cover"
+							/>
+						</SwiperSlide>
+					))}
+				</Swiper>
+			</div>
 			{car && (
 				<main className="w-full bg-white my-4 p-6 rounded-lg">
 					<div className="flex flex-col sm:flex-row mb-4 items-center justify-between">
