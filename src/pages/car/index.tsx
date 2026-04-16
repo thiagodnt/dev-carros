@@ -3,7 +3,7 @@ import { Container } from '../../components/Container';
 import { useEffect, useState } from 'react';
 import { Panel } from '../../components/Panel';
 import type { CarImageDTO } from '../../types/car';
-import { useParams } from 'react-router';
+import { replace, useNavigate, useParams } from 'react-router';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import toast from 'react-hot-toast';
@@ -28,6 +28,7 @@ interface CarDTO {
 
 export function CarDetails() {
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const [car, setCar] = useState<CarDTO>();
 	const [loading, setLoading] = useState(true);
 	const [slidesPerView, setSlidesPerView] = useState(2);
@@ -41,6 +42,11 @@ export function CarDetails() {
 			const docRef = doc(db, 'cars', id);
 			try {
 				const snapshot = await getDoc(docRef);
+
+				if (!snapshot.data()) {
+					navigate('/', { replace: true });
+				}
+
 				setCar({
 					city: snapshot.data()?.city,
 					created_at: snapshot.data()?.created_at,
@@ -83,24 +89,26 @@ export function CarDetails() {
 		<Container>
 			{loading && <LoaderOverlay />}
 			<Panel />
-			<div className="rounded-lg overflow-hidden">
-				<Swiper
-					slidesPerView={slidesPerView}
-					pagination={{ clickable: true }}
-					modules={[Navigation, Pagination]}
-					navigation
-				>
-					{car?.images.map((image) => (
-						<SwiperSlide key={image.name}>
-							<img
-								src={image.storage_url}
-								alt="Imagem do carro"
-								className="w-full h-96 object-cover"
-							/>
-						</SwiperSlide>
-					))}
-				</Swiper>
-			</div>
+			{car?.images && (
+				<div className="rounded-lg overflow-hidden">
+					<Swiper
+						slidesPerView={slidesPerView}
+						pagination={{ clickable: true }}
+						modules={[Navigation, Pagination]}
+						navigation
+					>
+						{car?.images.map((image) => (
+							<SwiperSlide key={image.name}>
+								<img
+									src={image.storage_url}
+									alt="Imagem do carro"
+									className="w-full h-96 object-cover"
+								/>
+							</SwiperSlide>
+						))}
+					</Swiper>
+				</div>
+			)}
 			{car && (
 				<main className="w-full bg-white my-4 p-6 rounded-lg">
 					<div className="flex flex-col sm:flex-row mb-4 items-center justify-between">
@@ -112,33 +120,33 @@ export function CarDetails() {
 							})}
 						</h1>
 					</div>
-					<p>{car.model}</p>
+					<p>{car?.model}</p>
 
 					<div className="flex w-full gap-6 my-4">
 						<div className="flex flex-col gap-4">
 							<div>
 								<p>Cidade</p>
-								<strong>{car.city}</strong>
+								<strong>{car?.city}</strong>
 							</div>
 							<div>
 								<p>Ano</p>
-								<strong>{car.year}</strong>
+								<strong>{car?.year}</strong>
 							</div>
 						</div>
 
 						<div className="flex flex-col gap-4">
 							<div>
 								<p>KM</p>
-								<strong>{car.km}</strong>
+								<strong>{car?.km}</strong>
 							</div>
 						</div>
 					</div>
 
 					<strong>Descrição</strong>
-					<p className="mb-4">{car.description}</p>
+					<p className="mb-4">{car?.description}</p>
 
 					<strong>Telefone / Whatsapp</strong>
-					<p>{car.whatsapp}</p>
+					<p>{car?.whatsapp}</p>
 
 					<a
 						href="#"
